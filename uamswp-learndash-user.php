@@ -4,7 +4,7 @@ Plugin Name: UAMSWP Custom Editor for Learndash
 Plugin URI: https://www.uams.edu
 Description: UAMSWP Add Capabilites to Editor for Learndash
 Author: Todd McKee, MEd
-Version: 0.1
+Version: 0.1.0
 */
 
 // If this file is called directly, abort.
