@@ -1,0 +1,29 @@
+name: Tests
+
+# Runs the Pest unit suite on every pull request and on pushes to the default branch.
+# Static analysis, formatting and the shared job chain are separate work (the code-quality
+# standard); this workflow holds only the suite.
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  pest:
+    name: Pest
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+      - name: Run the suite
+        run: composer test
