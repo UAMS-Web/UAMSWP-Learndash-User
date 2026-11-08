@@ -6,3 +6,7 @@
 #
 # `git blame` reads this file only when told to, once per clone:
 #   git config blame.ignoreRevsFile .git-blame-ignore-revs
+
+# Pint reformat of the plugin files, squash-merged with the Rector and PHPStan
+# adoption (UAMS-Web/UAMSWP-Learndash-User#17).
+3092319e9c0669c5372b44896c9a01d0b63d3e7a
