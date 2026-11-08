@@ -47,6 +47,84 @@ function uamsld_fake_editor(array $held): object
     };
 }
 
+/**
+ * The capabilities the plugin grants to and removes from the editor role, in call order.
+ *
+ * Two entries repeat in the plugin's list (`read_assignment`, `wpProQuiz_toplist_edit`);
+ * the repeats are pinned as they are, since each is one more `add_cap()` call.
+ *
+ * @return list<string>
+ */
+function uamsld_expected_caps(): array
+{
+    return [
+        'list_users',
+        'edit_users',
+        'enroll_users',
+        'manage_options',
+        'edit_courses',
+        'edit_others_courses',
+        'publish_courses',
+        'read_courses',
+        'read_private_courses',
+        'delete_courses',
+        'edit_published_courses',
+        'edit_private_courses',
+        'delete_others_courses',
+        'delete_published_courses',
+        'delete_private_courses',
+        'edit_groups',
+        'edit_others_groups',
+        'publish_groups',
+        'read_groups',
+        'read_private_groups',
+        'delete_groups',
+        'edit_published_groups',
+        'delete_others_groups',
+        'delete_published_groups',
+        'edit_reports',
+        'edit_others_reports',
+        'publish_reports',
+        'read_reports',
+        'read_private_reports',
+        'delete_reports',
+        'edit_published_reports',
+        'delete_others_reports',
+        'delete_published_reports',
+        'read_assignment',
+        'edit_assignment',
+        'edit_assignments',
+        'edit_others_assignments',
+        'publish_assignments',
+        'read_assignment',
+        'read_private_assignments',
+        'delete_assignment',
+        'edit_published_assignments',
+        'delete_others_assignments',
+        'delete_published_assignments',
+        'edit_essays',
+        'edit_others_essays',
+        'publish_essays',
+        'read_essays',
+        'read_private_essays',
+        'delete_essays',
+        'edit_published_essays',
+        'delete_others_essays',
+        'delete_published_essays',
+        'wpProQuiz_show',
+        'wpProQuiz_add_quiz',
+        'wpProQuiz_edit_quiz',
+        'wpProQuiz_delete_quiz',
+        'wpProQuiz_show_statistics',
+        'wpProQuiz_reset_statistics',
+        'wpProQuiz_import',
+        'wpProQuiz_export',
+        'wpProQuiz_change_settings',
+        'wpProQuiz_toplist_edit',
+        'wpProQuiz_toplist_edit',
+    ];
+}
+
 it('adds the LearnDash capabilities to an editor without read_courses', function (): void {
     $editor = uamsld_fake_editor([]);
     // Current behavior: the role is looked up a second time inside the branch.
@@ -54,8 +132,7 @@ it('adds the LearnDash capabilities to an editor without read_courses', function
 
     UAMSWP_Learndash_Custom_Capabilities::uamsld_add_roles();
 
-    expect($editor->added)
-        ->toContain('read_courses', 'edit_groups', 'read_reports', 'edit_essays', 'wpProQuiz_show')
+    expect($editor->added)->toBe(uamsld_expected_caps())
         ->and($editor->removed)->toBe([]);
 });
 
@@ -74,8 +151,7 @@ it('removes the LearnDash capabilities from an editor that has read_courses', fu
 
     UAMSWP_Learndash_Custom_Capabilities::uamsld_remove_roles();
 
-    expect($editor->removed)
-        ->toContain('read_courses', 'edit_groups', 'read_reports', 'edit_essays', 'wpProQuiz_show')
+    expect($editor->removed)->toBe(uamsld_expected_caps())
         ->and($editor->added)->toBe([]);
 });
 
