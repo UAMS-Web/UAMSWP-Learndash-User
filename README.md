@@ -12,3 +12,13 @@ composer test
 ```
 
 `composer test` runs `vendor/bin/pest` over `tests/Unit`. The same suite runs in GitHub Actions on every pull request.
+
+## Continuous integration
+
+`.github/workflows/ci.yml` calls the shared chain in `UAMS-Web/uams-ci-workflows`, so this plugin runs the same checks as the other UAMS-Web repositories instead of a copy of them. The call runs on Linux only, leaves mutation testing off, runs the unit suite as `composer test:unit`, and switches on the two jobs only a plugin runs: the PHP 8.2 floor lint and the download archive check. The job named `CI` reports the result of the whole call, and is the one check a ruleset requires from this workflow.
+
+The floor lint parses every shipped PHP file with the supported floor. To run it locally under another PHP:
+
+```sh
+LINT_PHP=/path/to/php8.2 composer lint:floor
+```
