@@ -7,6 +7,7 @@ Plugin URI: https://www.uams.edu
 Description: UAMSWP Add Capabilites to Editor for Learndash
 Author: Todd McKee, MEd
 Version: 0.1.0
+Requires PHP: 8.2
 */
 
 // If this file is called directly, abort.
@@ -14,10 +15,13 @@ if (! defined('WPINC')) {
     exit;
 }
 
-// This plugin uses namespaces and requires PHP 5.3 or greater.
-if (version_compare(PHP_VERSION, '5.3', '<')) {
-    add_action('admin_notices', create_function('', // phpcs:ignore WordPress.PHP.RestrictedPHPFunctions.create_function_create_function
-        "echo '<div class=\"error\"><p>".__('WSUWP Plugin Skeleton requires PHP 5.3 to function properly. Please upgrade PHP or deactivate the plugin.', 'wsuwp-plugin-skeleton')."</p></div>';"));
+// The plugin requires PHP 8.2 or greater. WordPress enforces `Requires PHP` when the
+// plugin is activated; this covers a site whose PHP is downgraded underneath an
+// already-active plugin, where the alternative is a fatal error.
+if (version_compare(PHP_VERSION, '8.2', '<')) {
+    add_action('admin_notices', static function (): void {
+        echo '<div class="error"><p>'.esc_html__('UAMSWP Custom Editor for Learndash requires PHP 8.2 to function properly. Please upgrade PHP or deactivate the plugin.', 'uamswp-learndash-user').'</p></div>';
+    });
 
     return;
 }

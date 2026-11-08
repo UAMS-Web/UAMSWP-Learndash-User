@@ -150,14 +150,6 @@ parameters:
     # an entry needs. With every entry commented out the key is empty, which
     # PHPStan reads as no entries.
     ignoreErrors:
-        # create_function() was removed in PHP 8.0. The call sits in the PHP 5.3
-        # version guard of the plugin header, which can never run on the PHP 8.2
-        # floor; the guard is left as it is until the floor ticket changes it.
-        -
-            identifier: function.notFound
-            message: '#^Function create_function not found\.$#'
-            path: uamswp-learndash-user.php
-
         # The UAMSWP_Learndash_Custom_Capabilities() helper calls get_instance(),
         # which the class does not define, so calling the helper fatals. Nothing
         # in the plugin calls the helper today. Pinned here, not fixed, because
