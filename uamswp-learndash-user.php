@@ -26,15 +26,6 @@ if (version_compare(PHP_VERSION, '8.2', '<')) {
     return;
 }
 
-require __DIR__.'/includes/uamswp-learndash-user.php';
+require_once __DIR__.'/includes/uamswp-learndash-user.php';
 register_activation_hook(__FILE__, ['UAMSWP_Learndash_Custom_Capabilities', 'uamsld_add_roles']);
 register_deactivation_hook(__FILE__, ['UAMSWP_Learndash_Custom_Capabilities', 'uamsld_remove_roles']);
-/**
- * Start things up.
- *
- * @return WSUWP_VALS_Custom_Roles
- */
-function UAMSWP_Learndash_Custom_Capabilities()
-{
-    return UAMSWP_Learndash_Custom_Capabilities::get_instance();
-}
