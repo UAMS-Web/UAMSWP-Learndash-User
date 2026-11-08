@@ -1,0 +1,10 @@
+{
+    "findings": [
+        {
+            "path": "uamswp-learndash-user.php",
+            "marker": "// @pest-mutate-ignore:RemoveFunctionCall,ConcatRemoveLeft,ConcatRemoveRight,ConcatSwitchSides",
+            "finding": "removes MORE than one mutant of a named mutator",
+            "detail": "RemoveFunctionCall=1, ConcatRemoveLeft=2, ConcatRemoveRight=2, ConcatSwitchSides=2"
+        }
+    ]
+}

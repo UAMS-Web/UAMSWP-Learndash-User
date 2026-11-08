@@ -18,6 +18,11 @@ if (! defined('WPINC')) {
 // The plugin requires PHP 8.2 or greater. WordPress enforces `Requires PHP` when the
 // plugin is activated; this covers a site whose PHP is downgraded underneath an
 // already-active plugin, where the alternative is a fatal error.
+// The branch cannot run in the suite: the suite runs on PHP 8.4 and PHP_VERSION is a
+// constant, and redefining version_compare() through Patchwork makes every mutation
+// child fail with a TypeError inside Patchwork (measured with Pest 5 and Patchwork on
+// Windows), so its mutants are uncovered by construction.
+// @pest-mutate-ignore:RemoveFunctionCall,ConcatRemoveLeft,ConcatRemoveRight,ConcatSwitchSides
 if (version_compare(PHP_VERSION, '8.2', '<')) {
     add_action('admin_notices', static function (): void {
         echo '<div class="error"><p>'.esc_html__('UAMSWP Custom Editor for Learndash requires PHP 8.2 to function properly. Please upgrade PHP or deactivate the plugin.', 'uamswp-learndash-user').'</p></div>';
