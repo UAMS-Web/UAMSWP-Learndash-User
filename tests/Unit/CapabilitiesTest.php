@@ -28,7 +28,7 @@ function uamsld_fake_editor(array $held): object
         public array $removed = [];
 
         /** @param  list<string>  $held */
-        public function __construct(private array $held) {}
+        public function __construct(private readonly array $held) {}
 
         public function has_cap(string $cap): bool
         {

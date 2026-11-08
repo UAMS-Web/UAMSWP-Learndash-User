@@ -124,6 +124,7 @@ return RectorConfig::configure()
     // modifications.
     ->withPaths([
         __DIR__.'/includes',
+        __DIR__.'/scripts',
         __DIR__.'/tests',
     ])
     // WordPress plugins: also analyze the PHP files at the repository root (the
