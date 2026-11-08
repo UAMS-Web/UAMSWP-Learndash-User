@@ -21,6 +21,7 @@ if (version_compare(PHP_VERSION, '5.3', '<')) {
 
     return;
 }
+
 require __DIR__.'/includes/uamswp-learndash-user.php';
 register_activation_hook(__FILE__, ['UAMSWP_Learndash_Custom_Capabilities', 'uamsld_add_roles']);
 register_deactivation_hook(__FILE__, ['UAMSWP_Learndash_Custom_Capabilities', 'uamsld_remove_roles']);
