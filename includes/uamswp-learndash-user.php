@@ -8,12 +8,12 @@ class UAMSWP_Learndash_Custom_Capabilities {
 	/**
 	 * Add custom capabilities to editors for learndash on deactivation.
 	 */
-	public static function uamsld_add_roles() {
+	public static function uamsld_add_roles(): void {
 		$editor = get_role( 'editor' );
 		if ( $editor && !($editor->has_cap( 'read_courses' ) ) ) {
 			// Add role capabilities for LD
 			$editor = get_role( 'editor' );
-			$caps = array(
+			$caps = [
 				'list_users',
 				'edit_users',
 				'enroll_users',
@@ -78,20 +78,21 @@ class UAMSWP_Learndash_Custom_Capabilities {
 				'wpProQuiz_change_settings',
 				'wpProQuiz_toplist_edit',
 				'wpProQuiz_toplist_edit'
-			);
+			];
 			foreach ( $caps as $cap ) {
 				$editor->add_cap( $cap );
 			}
 		}
 	}
+
 	/**
 	 * Remove custom roles on deactivation.
 	 */
-	public static function uamsld_remove_roles(){
+	public static function uamsld_remove_roles(): void{
 		//check if role exist before removing it
 		$editor = get_role( 'editor' );
 		if ( $editor && ($editor->has_cap( 'read_courses' ) ) ) {
-			$caps = array(
+			$caps = [
 				'list_users',
 				'edit_users',
 				'enroll_users',
@@ -156,7 +157,7 @@ class UAMSWP_Learndash_Custom_Capabilities {
 				'wpProQuiz_change_settings',
 				'wpProQuiz_toplist_edit',
 				'wpProQuiz_toplist_edit'
-			);
+			];
 			foreach ( $caps as $cap ) {
 				$editor->remove_cap( $cap );
 			}
