@@ -22,3 +22,11 @@ The floor lint parses every shipped PHP file with the supported floor. To run it
 ```sh
 LINT_PHP=/path/to/php8.2 composer lint:floor
 ```
+
+## Reading blame
+
+`.git-blame-ignore-revs` lists the whole-repository reformat commits `git blame` should skip. Run this once per clone to turn it on:
+
+```sh
+git config blame.ignoreRevsFile .git-blame-ignore-revs
+```
