@@ -4,11 +4,6 @@ declare(strict_types=1);
 class UAMSWP_Learndash_Custom_Capabilities
 {
     /**
-     * @var UAMSWP_Learndash_Custom_Capabilities
-     */
-    private static $instance;
-
-    /**
      * Add custom capabilities to editors for learndash on deactivation.
      */
     public static function uamsld_add_roles(): void
