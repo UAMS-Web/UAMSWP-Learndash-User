@@ -4,7 +4,7 @@ declare(strict_types=1);
 class UAMSWP_Learndash_Custom_Capabilities
 {
     /**
-     * Add custom capabilities to editors for learndash on deactivation.
+     * Add the LearnDash capabilities to the Editor role on activation.
      */
     public static function uamsld_add_roles(): void
     {
@@ -85,7 +85,7 @@ class UAMSWP_Learndash_Custom_Capabilities
     }
 
     /**
-     * Remove custom roles on deactivation.
+     * Remove the LearnDash capabilities from the Editor role on deactivation.
      */
     public static function uamsld_remove_roles(): void
     {
