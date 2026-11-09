@@ -10,7 +10,9 @@ declare(strict_types=1);
 
 use Brain\Monkey\Functions;
 
-it('registers the activation and deactivation hooks and defines no instance helper', function (): void {
+use function Brain\Monkey\Actions\expectAdded;
+
+it('registers the activation, deactivation and upgrade hooks and defines no instance helper', function (): void {
     if (! defined('WPINC')) {
         define('WPINC', 'wp-includes');
     }
@@ -21,6 +23,9 @@ it('registers the activation and deactivation hooks and defines no instance help
     Functions\expect('register_deactivation_hook')
         ->once()
         ->with(Mockery::type('string'), ['UAMSWP_Learndash_Custom_Capabilities', 'uamsld_remove_roles']);
+    expectAdded('plugins_loaded')
+        ->once()
+        ->with(['UAMSWP_Learndash_Custom_Capabilities', 'uamsld_upgrade']);
 
     require __DIR__.'/../../uamswp-learndash-user.php';
 
