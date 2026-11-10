@@ -35,3 +35,6 @@ if (version_compare(PHP_VERSION, '8.2', '<')) {
 require_once __DIR__.'/includes/uamswp-learndash-user.php';
 register_activation_hook(__FILE__, ['UAMSWP_Learndash_Custom_Capabilities', 'uamsld_add_roles']);
 register_deactivation_hook(__FILE__, ['UAMSWP_Learndash_Custom_Capabilities', 'uamsld_remove_roles']);
+// A site that was already active when the plugin's files were updated runs no activation hook,
+// so the capability set it holds is reconciled here instead.
+add_action('plugins_loaded', ['UAMSWP_Learndash_Custom_Capabilities', 'uamsld_upgrade']);

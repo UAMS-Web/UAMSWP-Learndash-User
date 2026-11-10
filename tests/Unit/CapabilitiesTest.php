@@ -48,6 +48,21 @@ function uamsld_fake_editor(array $held): object
 }
 
 /**
+ * The site-management capabilities the plugin used to grant beside the LearnDash ones.
+ * Activation must never add them, and the upgrade removes them in this order.
+ *
+ * @return list<string>
+ */
+function uamsld_dropped_caps(): array
+{
+    return [
+        'list_users',
+        'edit_users',
+        'manage_options',
+    ];
+}
+
+/**
  * The capabilities the plugin grants to and removes from the editor role, in call order.
  *
  * Two entries repeat in the plugin's list (`read_assignment`, `wpProQuiz_toplist_edit`);
@@ -58,10 +73,7 @@ function uamsld_fake_editor(array $held): object
 function uamsld_expected_caps(): array
 {
     return [
-        'list_users',
-        'edit_users',
         'enroll_users',
-        'manage_options',
         'edit_courses',
         'edit_others_courses',
         'publish_courses',
@@ -129,20 +141,67 @@ it('adds the LearnDash capabilities to an editor without read_courses', function
     $editor = uamsld_fake_editor([]);
     // Current behavior: the role is looked up a second time inside the branch.
     Functions\expect('get_role')->twice()->with('editor')->andReturn($editor);
+    Functions\expect('update_option')->once()->with('uamswp_learndash_user_caps_version', '1')->andReturn(true);
 
     UAMSWP_Learndash_Custom_Capabilities::uamsld_add_roles();
 
     expect($editor->added)->toBe(uamsld_expected_caps())
+        ->and($editor->added)->not->toContain(...uamsld_dropped_caps())
         ->and($editor->removed)->toBe([]);
 });
 
 it('leaves an editor that already has read_courses alone when adding', function (): void {
     $editor = uamsld_fake_editor(['read_courses']);
     Functions\expect('get_role')->once()->with('editor')->andReturn($editor);
+    Functions\expect('update_option')->never();
 
     UAMSWP_Learndash_Custom_Capabilities::uamsld_add_roles();
 
     expect($editor->added)->toBe([]);
+});
+
+it('removes the dropped capabilities from an editor that has read_courses on upgrade', function (string|false $stored): void {
+    $editor = uamsld_fake_editor(['read_courses', ...uamsld_dropped_caps()]);
+    Functions\expect('get_option')->once()->with('uamswp_learndash_user_caps_version')->andReturn($stored);
+    Functions\expect('get_role')->once()->with('editor')->andReturn($editor);
+    Functions\expect('update_option')->once()->with('uamswp_learndash_user_caps_version', '1')->andReturn(true);
+
+    UAMSWP_Learndash_Custom_Capabilities::uamsld_upgrade();
+
+    expect($editor->removed)->toBe(uamsld_dropped_caps())
+        ->and($editor->added)->toBe([]);
+})->with([
+    'no option, a site activated before the option existed' => [false],
+    'an older revision' => ['0'],
+]);
+
+it('records the revision without touching an editor the plugin never granted the set to', function (): void {
+    // No read_courses: the set is not this plugin's, so a cap another source granted stays.
+    $editor = uamsld_fake_editor(uamsld_dropped_caps());
+    Functions\expect('get_option')->once()->with('uamswp_learndash_user_caps_version')->andReturn(false);
+    Functions\expect('get_role')->once()->with('editor')->andReturn($editor);
+    Functions\expect('update_option')->once()->with('uamswp_learndash_user_caps_version', '1')->andReturn(true);
+
+    UAMSWP_Learndash_Custom_Capabilities::uamsld_upgrade();
+
+    expect($editor->removed)->toBe([])
+        ->and($editor->added)->toBe([]);
+});
+
+it('records the revision when the editor role does not exist on upgrade', function (): void {
+    Functions\expect('get_option')->once()->with('uamswp_learndash_user_caps_version')->andReturn(false);
+    Functions\expect('get_role')->once()->with('editor')->andReturn(null);
+    Functions\expect('update_option')->once()->with('uamswp_learndash_user_caps_version', '1')->andReturn(true);
+
+    UAMSWP_Learndash_Custom_Capabilities::uamsld_upgrade();
+});
+
+it('does nothing on upgrade when the site is already on the current revision', function (): void {
+    Functions\expect('get_option')->once()->with('uamswp_learndash_user_caps_version')->andReturn('1');
+    Functions\expect('get_role')->never();
+    Functions\expect('update_option')->never();
+
+    UAMSWP_Learndash_Custom_Capabilities::uamsld_upgrade();
 });
 
 it('removes the LearnDash capabilities from an editor that has read_courses', function (): void {

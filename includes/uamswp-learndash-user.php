@@ -4,6 +4,18 @@ declare(strict_types=1);
 class UAMSWP_Learndash_Custom_Capabilities
 {
     /**
+     * Option holding the revision of the capability set the editor role was last brought to.
+     * Absent on a site that activated a release before the option existed.
+     */
+    public const VERSION_OPTION = 'uamswp_learndash_user_caps_version';
+
+    /**
+     * Revision of the capability set. Bump it when the set changes, and have uamsld_upgrade()
+     * reconcile a site that is on an older revision.
+     */
+    public const CAPS_VERSION = '1';
+
+    /**
      * Add the LearnDash capabilities to the Editor role on activation.
      */
     public static function uamsld_add_roles(): void
@@ -13,10 +25,7 @@ class UAMSWP_Learndash_Custom_Capabilities
             // Add role capabilities for LD
             $editor = get_role('editor');
             $caps = [
-                'list_users',
-                'edit_users',
                 'enroll_users',
-                'manage_options',
                 'edit_courses',
                 'edit_others_courses',
                 'publish_courses',
@@ -81,7 +90,45 @@ class UAMSWP_Learndash_Custom_Capabilities
             foreach ($caps as $cap) {
                 $editor->add_cap($cap);
             }
+
+            // The set this activation granted is the current one, so the upgrade has nothing to do.
+            update_option(self::VERSION_OPTION, self::CAPS_VERSION);
         }
+    }
+
+    /**
+     * Bring the Editor role of a site that activated an earlier release to the current
+     * capability set. Runs on `plugins_loaded`, before the current user's capabilities are
+     * read at `init`, and does its work once: the option records the revision reached.
+     *
+     * Only an editor role holding `read_courses` is touched. That is the marker activation
+     * leaves and deactivation clears, so a site where this plugin never granted the set
+     * (a deactivated site, or a network site that activation did not reach) is left alone.
+     */
+    public static function uamsld_upgrade(): void
+    {
+        if (get_option(self::VERSION_OPTION) === self::CAPS_VERSION) {
+            return;
+        }
+
+        $editor = get_role('editor');
+        if ($editor && ($editor->has_cap('read_courses'))) {
+            // Capabilities earlier releases granted to the editor role beside the LearnDash
+            // ones. None of them is a LearnDash capability: `manage_options` is the site
+            // settings screens, and `list_users` and `edit_users` are the user accounts.
+            // Revision 1 stops granting them. The list is a local rather than a class
+            // constant so that coverage records it as executed and mutation testing reaches it.
+            $dropped = [
+                'list_users',
+                'edit_users',
+                'manage_options',
+            ];
+            foreach ($dropped as $cap) {
+                $editor->remove_cap($cap);
+            }
+        }
+
+        update_option(self::VERSION_OPTION, self::CAPS_VERSION);
     }
 
     /**
@@ -93,10 +140,7 @@ class UAMSWP_Learndash_Custom_Capabilities
         $editor = get_role('editor');
         if ($editor && ($editor->has_cap('read_courses'))) {
             $caps = [
-                'list_users',
-                'edit_users',
                 'enroll_users',
-                'manage_options',
                 'edit_courses',
                 'edit_others_courses',
                 'publish_courses',
