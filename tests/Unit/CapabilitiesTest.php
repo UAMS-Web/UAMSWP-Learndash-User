@@ -14,37 +14,40 @@ use Brain\Monkey\Functions;
 
 /**
  * Stand-in for the editor role: records which capabilities were added or removed.
- *
+ */
+final class UamsldFakeEditor
+{
+    /** @var list<string> */
+    public array $added = [];
+
+    /** @var list<string> */
+    public array $removed = [];
+
+    /** @param  list<string>  $held  Capabilities the role already has. */
+    public function __construct(private readonly array $held) {}
+
+    public function has_cap(string $cap): bool
+    {
+        return in_array($cap, $this->held, true);
+    }
+
+    public function add_cap(string $cap): void
+    {
+        $this->added[] = $cap;
+    }
+
+    public function remove_cap(string $cap): void
+    {
+        $this->removed[] = $cap;
+    }
+}
+
+/**
  * @param  list<string>  $held  Capabilities the role already has.
  */
-function uamsld_fake_editor(array $held): object
+function uamsld_fake_editor(array $held): UamsldFakeEditor
 {
-    return new class($held)
-    {
-        /** @var list<string> */
-        public array $added = [];
-
-        /** @var list<string> */
-        public array $removed = [];
-
-        /** @param  list<string>  $held */
-        public function __construct(private readonly array $held) {}
-
-        public function has_cap(string $cap): bool
-        {
-            return in_array($cap, $this->held, true);
-        }
-
-        public function add_cap(string $cap): void
-        {
-            $this->added[] = $cap;
-        }
-
-        public function remove_cap(string $cap): void
-        {
-            $this->removed[] = $cap;
-        }
-    };
+    return new UamsldFakeEditor($held);
 }
 
 /**
