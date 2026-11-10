@@ -16,20 +16,6 @@ class UAMSWP_Learndash_Custom_Capabilities
     public const CAPS_VERSION = '1';
 
     /**
-     * Capabilities earlier releases granted to the editor role beside the LearnDash ones.
-     * None of them is a LearnDash capability: `manage_options` is the site settings screens,
-     * and `list_users` and `edit_users` are the user accounts. Revision 1 stops granting them,
-     * and uamsld_upgrade() removes them from a site activated under an earlier release.
-     *
-     * @var list<string>
-     */
-    private const DROPPED_CAPS = [
-        'list_users',
-        'edit_users',
-        'manage_options',
-    ];
-
-    /**
      * Add the LearnDash capabilities to the Editor role on activation.
      */
     public static function uamsld_add_roles(): void
@@ -127,7 +113,17 @@ class UAMSWP_Learndash_Custom_Capabilities
 
         $editor = get_role('editor');
         if ($editor && ($editor->has_cap('read_courses'))) {
-            foreach (self::DROPPED_CAPS as $cap) {
+            // Capabilities earlier releases granted to the editor role beside the LearnDash
+            // ones. None of them is a LearnDash capability: `manage_options` is the site
+            // settings screens, and `list_users` and `edit_users` are the user accounts.
+            // Revision 1 stops granting them. The list is a local rather than a class
+            // constant so that coverage records it as executed and mutation testing reaches it.
+            $dropped = [
+                'list_users',
+                'edit_users',
+                'manage_options',
+            ];
+            foreach ($dropped as $cap) {
                 $editor->remove_cap($cap);
             }
         }
