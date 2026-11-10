@@ -142,8 +142,7 @@ function uamsld_expected_caps(): array
 
 it('adds the LearnDash capabilities to an editor without read_courses', function (): void {
     $editor = uamsld_fake_editor([]);
-    // Current behavior: the role is looked up a second time inside the branch.
-    Functions\expect('get_role')->twice()->with('editor')->andReturn($editor);
+    Functions\expect('get_role')->once()->with('editor')->andReturn($editor);
     Functions\expect('update_option')->once()->with('uamswp_learndash_user_caps_version', '1')->andReturn(true);
 
     UAMSWP_Learndash_Custom_Capabilities::uamsld_add_roles();
