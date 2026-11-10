@@ -23,7 +23,6 @@ class UAMSWP_Learndash_Custom_Capabilities
         $editor = get_role('editor');
         if ($editor && ! ($editor->has_cap('read_courses'))) {
             // Add role capabilities for LD
-            $editor = get_role('editor');
             $caps = [
                 'enroll_users',
                 'edit_courses',
