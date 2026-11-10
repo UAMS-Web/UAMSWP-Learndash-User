@@ -30,3 +30,13 @@ LINT_PHP=/path/to/php8.2 composer lint:floor
 ```sh
 git config blame.ignoreRevsFile .git-blame-ignore-revs
 ```
+
+## Credits
+
+Developed and maintained by UAMS Web Services.
+
+Developers:
+
+- Josh Daugherty
+- Todd McKee, MEd
+- Brent Passmore
