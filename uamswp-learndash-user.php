@@ -7,7 +7,7 @@ Plugin URI: https://www.uams.edu
 Description: UAMSWP Add Capabilites to Editor for Learndash
 Author: UAMS Web Services
 Author URI: https://communications.uams.edu/web/
-Version: 0.2.0
+Version: 0.3.0
 Requires PHP: 8.2
 */
 
