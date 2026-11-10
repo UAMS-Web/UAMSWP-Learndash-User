@@ -10,6 +10,8 @@
 declare(strict_types=1);
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+
 use function Brain\Monkey\setUp;
 use function Brain\Monkey\tearDown;
 
@@ -26,7 +28,7 @@ use function Brain\Monkey\tearDown;
  * risky (failOnRisky would fail it). The base class is typed so `$this` in a
  * hook is a test case and not `mixed`, which PHPStan level 10 rejects.
  */
-abstract class UnitTestCase extends PHPUnit\Framework\TestCase
+abstract class UnitTestCase extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
