@@ -11,8 +11,10 @@ name: CI
 # chain's own header lists every input and its default.
 #
 # Mutation testing: a pull request or a push mutates only the PHP files under `mutate-paths`
-# it adds or changes; a `workflow_dispatch` run mutates everything `composer mutate` covers.
-# Either fails on any survivor, uncovered or timed-out mutant.
+# it adds or changes; a `workflow_dispatch` or weekly `schedule` run mutates everything `composer mutate`
+# covers, under the chain's default full-run timeout (180 minutes) in place of the 45 minutes a pull
+# request gets. Either fails on any survivor, uncovered or timed-out mutant. The weekly run catches decay
+# no pull request touches.
 #
 # The last job, `CI`, is the one check a ruleset requires from this workflow (with the two
 # pull-request-body checks, `Attribution footer` and `Closing keywords`). It `needs:` the
@@ -33,6 +35,9 @@ on:
   push:
     branches: [master]
   workflow_dispatch:
+  schedule:
+    # Mondays at 08:00 UTC: the full mutation pass.
+    - cron: '0 8 * * 1'
 
 # A new push to a pull request cancels that pull request's stale run. Every other run gets a
 # group of its own, keyed on the commit, so a later push never cancels it.
