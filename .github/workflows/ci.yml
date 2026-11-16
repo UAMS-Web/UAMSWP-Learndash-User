@@ -52,8 +52,8 @@ jobs:
   # The shared chain. Its checks report as `checks / <job name> (<operating system>)`.
   checks:
     # Pinned to a release tag, never a branch or a commit, so a change to the chain reaches this plugin
-    # only when the pin moves. v0.9.0 carries the plugin inputs (UAMS-Web/uams-ci-workflows#21).
-    uses: UAMS-Web/uams-ci-workflows/.github/workflows/ci.yml@v0.9.0
+    # only when the pin moves. The plugin inputs arrived in v0.9.0 (UAMS-Web/uams-ci-workflows#21).
+    uses: UAMS-Web/uams-ci-workflows/.github/workflows/ci.yml@v0.13.0
     with:
       linux-only: true
       mutate-ignore-paths: includes
