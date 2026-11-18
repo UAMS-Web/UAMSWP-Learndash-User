@@ -2,6 +2,14 @@
 
 A WordPress plugin that adds the LearnDash capabilities to the Editor role on activation and removes them on deactivation.
 
+## Documentation
+
+The [wiki](https://github.com/UAMS-Web/UAMSWP-Learndash-User/wiki) lists every capability the plugin grants and explains what it does on activation, on upgrade and on deactivation. Its pages are written in `docs/wiki/` and published from there by the `Publish wiki` workflow, so change them through a pull request.
+
+## Requirements and installation
+
+The plugin needs WordPress 6.8 or later and PHP 8.2 or later. Install it like any plugin, by placing its folder in the site's `wp-content/plugins/` directory, and activate it from the Plugins screen. Activation adds the capabilities to the Editor role; deactivation removes them.
+
 ## Tests
 
 The unit suite runs on Pest 5 with Brain Monkey, so it needs no database and no WordPress checkout. It develops and tests on PHP 8.4 (`config.platform.php` in `composer.json` pins `8.4.27`); the development dependencies are never part of the deployed plugin.
